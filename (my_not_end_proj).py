@@ -1,5 +1,5 @@
 import random
-import math
+import sys
 
 dictionary_of_all_message_on_diff_language = {
     "welcome": {
@@ -15,8 +15,8 @@ dictionary_of_all_message_on_diff_language = {
         "ru": "Вы можете выбрать уровень сложности, который влияет на диапазон, в котором может оказаться данное число."
     },
     "lvl_type": {
-        "en": "Levels are ranged from 1 to 5, which correspond to powers of ten as the maximum number in the range",
-        "ru": "Уровни ранжируются от 1 до 5, которые соответствуют степени десятки = максимальному числу из диапазона"
+        "en": "Levels are ranged from 1 to 5, which correspond to powers of ten as the maximum number in the range: ",
+        "ru": "Уровни ранжируются от 1 до 5, которые соответствуют степени десятки = максимальному числу из диапазона: "
     },
     "lvl_1": {
         "en": "You have selected level 1",
@@ -67,73 +67,98 @@ dictionary_of_all_message_on_diff_language = {
         "ru": "Результат алгоритма и количество ходов: "
     },
     "exit_txt": {
-        "en": "Exit?: ",
-        "ru": "Выйти?: "
+        "en": "Exit?(YES/NO): ",
+        "ru": "Выйти?(ДА/НЕТ): "
     }
 }
 
+
 def bin_search(num, sec_num):
+    col = 0
     lt = list(range(0, 10 ** num + 1))
     low = 0
     high = len(lt) - 1
-    #Цикл бинарного поиска
+    # Цикл бинарного поиска
     while low <= high:
-        mid = (low + high)/2
+        col += 1
+        mid = (low + high) // 2  # Целочисленное деление
         ans = lt[mid]
         if ans == sec_num:
-            return list[mid]
+            return ans, col
         if ans > sec_num:
             high = mid - 1
         else:
             low = mid + 1
-    return None
+    return None, col
+
+
+def int_value(line):
+    while True:
+        check = input(line.strip())
+        try:
+            return int(check)
+        except ValueError:
+            print("Error!")
 
 
 def game_process(language, sec_num, st):
     num = -1
     while num != sec_num:
-        num = int(input(print("enter_num", language)))
-        if num > sec_num:
-            print("bigger", language)
+        num = int(input(dictionary_of_all_message_on_diff_language["enter_num"][language]))
+        if num < 0 or num > 10**st:
+            print(dictionary_of_all_message_on_diff_language["range"][language])
         elif num < sec_num:
-            print("lower", language)
-        elif num < 0 or num > 10**st:
-            print("range", language)
+            print(dictionary_of_all_message_on_diff_language["bigger"][language])
+        elif num > sec_num:
+            print(dictionary_of_all_message_on_diff_language["lower"][language])
         else:
-            print("win_txt", language)
-            print("best_way", language, bin_search(st, sec_num), math.log2(10**st))
-
-
+            print(dictionary_of_all_message_on_diff_language["win_txt"][language])
+            print(dictionary_of_all_message_on_diff_language["best_way"][language], bin_search(st, sec_num))
 
 
 def new_game(language):
     #Краткое текстовое описание
-    print("game_start_txt", language)
-    print("choose_of_hard_lvl", language)
-    num = int(input(print("lvl_type", language)))
+    print(dictionary_of_all_message_on_diff_language["game_start_txt"][language])
+    print(dictionary_of_all_message_on_diff_language["choose_of_hard_lvl"][language])
+    num = abs(int_value(dictionary_of_all_message_on_diff_language["lvl_type"][language]))
     #Выбор уровня игры
-    if num == 1:
-        sec_num = random.randint(0, 10**num)
-        print("lvl_1", language)
-        game_process(language, sec_num, num)
-    elif num == 2:
-        sec_num = random.randint(0, 10**num)
-        print("lvl_2", language)
-        game_process(language, sec_num, num)
-    elif num == 3:
-        sec_num = random.randint(0, 10**num)
-        print("lvl_3", language)
-        game_process(language, sec_num, num)
-    elif num == 4:
-        sec_num = random.randint(0, 10**num)
-        print("lvl_4", language)
-        game_process(language, sec_num, num)
-    elif num == 5:
-        sec_num = random.randint(0, 10**num)
-        print("lvl_5", language)
-        game_process(language, sec_num, num)
+    while num != -1:
+        if num == 1:
+            sec_num = random.randint(0, 10**num)
+            print(dictionary_of_all_message_on_diff_language["lvl_1"][language])
+            game_process(language, sec_num, num)
+            num = -1
+        elif num == 2:
+            sec_num = random.randint(0, 10**num)
+            print(dictionary_of_all_message_on_diff_language["lvl_2"][language])
+            game_process(language, sec_num, num)
+            num = -1
+        elif num == 3:
+            sec_num = random.randint(0, 10**num)
+            print(dictionary_of_all_message_on_diff_language["lvl_3"][language])
+            game_process(language, sec_num, num)
+            num = -1
+        elif num == 4:
+            sec_num = random.randint(0, 10**num)
+            print(dictionary_of_all_message_on_diff_language["lvl_4"][language])
+            game_process(language, sec_num, num)
+            num = -1
+        elif num == 5:
+            sec_num = random.randint(0, 10**num)
+            print(dictionary_of_all_message_on_diff_language["lvl_5"][language])
+            game_process(language, sec_num, num)
+            num = -1
+        else:
+            num = abs(int_value(dictionary_of_all_message_on_diff_language["lvl_type"][language]))
+            continue
+
+
+def check_of(txt, language):
+    check = input(dictionary_of_all_message_on_diff_language[txt][language]).strip().upper()
+    if check == "YES" or check == "ДА":
+        return True
     else:
-        return 0
+        return False
 
 
 def main():
@@ -145,7 +170,7 @@ def main():
         #Модуль выбора языка
         language = input("Choose a language('ru' or 'en'): ").strip().lower()
         if language == 'ru':
-            print("You have chosen Russian")
+            print("Вы выбрали русский язык.")
             if input(dictionary_of_all_message_on_diff_language["true/false"][language]).strip().upper() == "ДА":
                 language = "ru"
                 exit_token = -1
@@ -160,16 +185,19 @@ def main():
                 continue
         else:
             continue
-
-        #Модуль начала запуска игры
-        if input(dictionary_of_all_message_on_diff_language["welcome"][language]).strip().upper() == "YES" or "ДА":
+    exit_token = 0
+    #Модуль начала запуска игры
+    while exit_token != -1:
+        if check_of("welcome", language):
             new_game(language)
         else:
             continue
-        if input(dictionary_of_all_message_on_diff_language["exit_txt"][language]) == "YES" or "ДА":
-            return main()
+        if not check_of("exit_txt", language):
+            sys.exit()
         else:
-            return 0
+            continue
 
-main()
+
+if __name__ == "__main__":
+    main()
 
