@@ -3,7 +3,7 @@ import sys
 
 dictionary_of_all_message_on_diff_language = {
     "welcome": {
-        "en": "Hello my dear friend!\nDO YOU WANT TO PLAY A GUESSING GAME?\nprint «YES» or «NO»: ",
+        "en": "Hello my dear friend!\nDO YOU WANT TO PLAY A GUESSING GAME?\nPrint «YES» or «NO»: ",
         "ru": "Привет, мой дорогой друг!\nХОТИТЕ ПОИГРАТЬ В УГАДАЙКУ?\nНапечатайте «ДА» или «НЕТ»:"
     },
     "game_start_txt": {
@@ -104,7 +104,7 @@ def int_value(line):
 def game_process(language, sec_num, st):
     num = -1
     while num != sec_num:
-        num = int(input(dictionary_of_all_message_on_diff_language["enter_num"][language]))
+        num = int_value(dictionary_of_all_message_on_diff_language["enter_num"][language])
         if num < 0 or num > 10**st:
             print(dictionary_of_all_message_on_diff_language["range"][language])
         elif num < sec_num:
@@ -156,16 +156,19 @@ def new_game(language):
 def check_of(txt, language):
     check = input(dictionary_of_all_message_on_diff_language[txt][language]).strip().upper()
     if check == "YES" or check == "ДА":
-        return True
+        return 1
+    elif check == "NO" or check == "НЕТ":
+        return -1
     else:
-        return False
+        print("Error!")
+        return 0
 
 
 def main():
 
     #Создание необходимых переменных
     exit_token = 0
-
+    langauge = ''
     while exit_token != -1:
         #Модуль выбора языка
         language = input("Choose a language('ru' or 'en'): ").strip().lower()
@@ -188,12 +191,19 @@ def main():
     exit_token = 0
     #Модуль начала запуска игры
     while exit_token != -1:
-        if check_of("welcome", language):
+        res = check_of("welcome", language)
+        if res == 1:
             new_game(language)
-        else:
-            continue
-        if not check_of("exit_txt", language):
-            sys.exit()
+        elif res == -1:
+            # Модуль выхода из игры
+            while exit_token != -1:
+                res = check_of("exit_txt", language)
+                if res == 1:
+                    sys.exit()
+                elif res == -1:
+                    return main()
+                else:
+                    continue
         else:
             continue
 
